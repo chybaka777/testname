@@ -1,0 +1,32 @@
+select   i.point, i.date, sum(i.inc) as money
+ from income i left join outcome o
+on i.date=o.date and 
+i.point=o.point
+where o.out is null
+group by i.point, i.date
+union
+select distinct o.point, o.date, sum(o.out) as money
+from outcome o left join income i
+on i.date=o.date and 
+i.point=o.point
+where i.inc is null
+group by o.point, o.date
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+70
+select name as bat from(select sh, count(country) as cntry, name from(select count( ship) as sh,  country, battles.name from classes right join outcomes
+               on classes.class=outcomes.ship  join battles
+               on outcomes.battle=battles.name
+group by country, name
+having country IS NOT NULL
+union 
+select count( ships.name) as sh,  country, battles.name from classes  join ships
+               on classes.class=ships.class  join outcomes
+               on outcomes.ship=ships.name  join battles
+               on outcomes.battle=battles.name
+group by  battles.name, country
+having country IS NOT NULL) as trr
+group by sh, name
+having count(country)=1 and sh>=3) as prr 
+where  name is not null
